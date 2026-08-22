@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 Matematik Profesörü YZ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #0a0a15;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: #12121f;
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9);
+            border: 1px solid #1e1e3a;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header p {
+            color: #666;
+            font-size: 0.8rem;
+        }
+        .badge {
+            display: inline-block;
+            background: #1a1a30;
+            padding: 3px 14px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            color: #888;
+            border: 1px solid #2a2a4a;
+            margin-top: 4px;
+        }
+        .chat-area {
+            background: #0a0a15;
+            border-radius: 16px;
+            padding: 14px;
+            height: 380px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            border: 1px solid #1a1a30;
+        }
+        .chat-area::-webkit-scrollbar {
+            width: 5px;
+        }
+        .chat-area::-webkit-scrollbar-thumb {
+            background: #2a2a4a;
+            border-radius: 10px;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 10px 14px;
+            border-radius: 14px;
+            max-width: 88%;
+            word-wrap: break-word;
+            line-height: 1.7;
+            font-size: 0.92rem;
+        }
+        .user-msg {
+            background: #1a1a3a;
+            border: 1px solid #2a2a5a;
+            margin-left: auto;
+            text-align: right;
+        }
+        .ai-msg {
+            background: #1a1a2a;
+            border: 1px solid #2a2a4a;
+            margin-right: auto;
+            white-space: pre-wrap;
+        }
+        .ai-msg img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 6px;
+        }
+        .message .label {
+            font-size: 0.65rem;
+            color: #666;
+            margin-bottom: 3px;
+        }
+        .input-area {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .input-area input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #1e1e3a;
+            border-radius: 14px;
+            background: #0a0a15;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.3s;
+            min-width: 160px;
+        }
+        .input-area input:focus {
+            border-color: #3a7bd5;
+            box-shadow: 0 0 20px rgba(58, 123, 213, 0.12);
+        }
+        .input-area button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: #fff;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .input-area button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(0, 210, 255, 0.15);
+        }
+        .input-area button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .quick-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .quick-buttons button {
+            padding: 4px 10px;
+            border: 1px solid #2a2a4a;
+            border-radius: 14px;
+            background: #1a1a30;
+            color: #aaa;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .quick-buttons button:hover {
+            border-color: #3a7bd5;
+            color: #fff;
+            background: #1e1e3a;
+        }
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 6px;
+            font-size: 0.65rem;
+            color: #444466;
+            border-top: 1px solid #1a1a30;
+            padding-top: 12px;
+            margin-top: 10px;
+        }
+        @media (max-width: 500px) {
+            .container {
+                padding: 14px;
+            }
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            .chat-area {
+                height: 280px;
+            }
+            .input-area input {
+                min-width: 100px;
+                font-size: 0.85rem;
+            }
+            .input-area button {
+                padding: 10px 16px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Matematik Profesörü</h1>
+            <p>Sıfırdan yazılmış, anahtarsız YZ</p>
+            <div class="badge">📚 Tüm Konular • İlkokul → Akademik • Sohbet</div>
+        </div>
+
+        <div class="quick-buttons">
+            <button onclick="soruGir('Merhaba')">👋 Merhaba</button>
+            <button onclick="soruGir('5 + 3')">5+3</button>
+            <button onclick="soruGir('cos(60)')">cos(60)</button>
+            <button onclick="soruGir('2^8')">2^8</button>
+            <button onclick="soruGir('Pisagor nedir?')">Pisagor</button>
+            <button onclick="soruGir('Türev nedir?')">Türev</button>
+            <button onclick="soruGir('f(x)=x^2 grafik çiz -5 5')">📈 Grafik</button>
+            <button onclick="soruGir('12 ve 18 ebob')">EBOB</button>
+            <button onclick="soruGir('5!')">5!</button>
+        </div>
+
+        <div class="chat-area" id="chatArea">
+            <div class="message ai-msg">
+                <div class="label">🧠 YZ</div>
+                Merhaba! 👋 Ben Matematik Profesörü YZ.<br>
+                Tüm matematik konularını bilirim. Bana istediğini sorabilirsin.
+            </div>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="soruInput" placeholder="Soru yaz..." />
+            <button id="gonderBtn" onclick="sor()">➤ Gönder</button>
+        </div>
+
+        <div class="footer">
+            <span>🧠 Termux • GitHub Pages</span>
+            <span>⚡ %100 Doğru</span>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // MATEMATİK PROFESÖRÜ YZ - KURALLI MOTOR (Örnek yok)
+        // ============================================================
+
+        const chatArea = document.getElementById('chatArea');
+        const soruInput = document.getElementById('soruInput');
+        const gonderBtn = document.getElementById('gonderBtn');
+
+        // ------------------------------------------------------------
+        // 1. MATEMATİK KURALLARI (Tüm konular)
+        // ------------------------------------------------------------
+
+        const kurallar = {
+
+            // ----- 1. TEMEL İŞLEMLER -----
+            topla: (a, b) => a + b,
+            cikar: (a, b) => a - b,
+            carp: (a, b) => a * b,
+            bol: (a, b) => b === 0 ? 'Tanımsız (sıfıra bölünemez)' : a / b,
+
+            // ----- 2. ÜSLÜ VE KÖKLÜ -----
+            us: (a, b) => Math.pow(a, b),
+            karekok: (x) => x < 0 ? 'Karmaşık sayı' : Math.sqrt(x),
+            kupkok: (x) => Math.cbrt(x),
+
+            // ----- 3. FAKTÖRİYEL -----
+            faktoriyel: function(n) {
+                if (n < 0) return 'Tanımsız (negatif sayı)';
+                if (n > 20) return 'Çok büyük (max 20)';
+                if (n === 0 || n === 1) return 1;
+                let s = 1;
+                for (let i = 2; i <= n; i++) s *= i;
+                return s;
+            },
+
+            // ----- 4. EBOB - EKOK -----
+            ebob: function(a, b) {
+                a = Math.abs(a);
+                b = Math.abs(b);
+                while (b) { let t = b;
+                    b = a % b;
+                    a = t; }
+                return a;
+            },
+            ekok: function(a, b) {
+                if (a === 0 || b === 0) return 0;
+                return (a * b) / this.ebob(a, b);
+            },
+
+            // ----- 5. ASAL SAYI -----
+            asalMi: function(n) {
+                if (n < 2) return false;
+                for (let i = 2; i * i <= n; i++) {
+                    if (n % i === 0) return false;
+                }
+                return true;
+            },
+
+            // ----- 6. KOMBİNASYON - PERMÜTASYON -----
+            kombinasyon: function(n, r) {
+                if (r > n) return 'Tanımsız (r>n)';
+                const f = this.faktoriyel;
+                return f(n) / (f(r) * f(n - r));
+            },
+            permutasyon: function(n, r) {
+                if (r > n) return 'Tanımsız (r>n)';
+                const f = this.faktoriyel;
+                return f(n) / f(n - r);
+            },
+
+            // ----- 7. TRİGONOMETRİ -----
+            sin: (x) => Math.sin(x * Math.PI / 180),
+            cos: (x) => Math.cos(x * Math.PI / 180),
+            tan: function(x) {
+                const c = this.cos(x);
+                return c === 0 ? 'Tanımsız' : this.sin(x) / c;
+            },
+            cot: function(x) {
+                const s = this.sin(x);
+                return s === 0 ? 'Tanımsız' : this.cos(x) / s;
+            },
+
+            // ----- 8. LOGARİTMA -----
+            log: (x) => x <= 0 ? 'Tanımsız (pozitif olmalı)' : Math.log10(x),
+            ln: (x) => x <= 0 ? 'Tanımsız (pozitif olmalı)' : Math.log(x),
+
+            // ----- 9. DİZİ -----
+            aritmetikDizi: (a1, d, n) => a1 + (n - 1) * d,
+            geometrikDizi: (a1, r, n) => a1 * Math.pow(r, n - 1),
+
+            // ----- 10. İKİNCİ DERECE DENKLEM -----
+            ikinciDerece: function(a, b, c) {
+                if (a === 0) return 'Birinci derece denklem';
+                const delta = b * b - 4 * a * c;
+                if (delta < 0) {
+                    const r = -b / (2 * a);
+                    const i = Math.sqrt(-delta) / (2 * a);
+                    return `Karmaşık: x₁ = ${r} + ${i}i, x₂ = ${r} - ${i}i`;
+                }
+                if (delta === 0) return `x = ${-b/(2*a)} (çift kat)`;
+                const x1 = (-b + Math.sqrt(delta)) / (2 * a);
+                const x2 = (-b - Math.sqrt(delta)) / (2 * a);
+                return `x₁ = ${x1.toFixed(4)}, x₂ = ${x2.toFixed(4)}`;
+            },
+
+            // ----- 11. TÜREV -----
+            turev: function(f, x) {
+                const kurallar = {
+                    'x^2': 2 * x,
+                    'x^3': 3 * x * x,
+                    'sin': Math.cos(x * Math.PI / 180),
+                    'cos': -Math.sin(x * Math.PI / 180),
+                    'e^x': Math.exp(x),
+                    'ln(x)': x === 0 ? 'Tanımsız' : 1 / x,
+                    '1/x': x === 0 ? 'Tanımsız' : -1 / (x * x)
+                };
+                return kurallar[f] || 'Bilinmeyen fonksiyon';
+            },
+
+            // ----- 12. İNTEGRAL -----
+            integral: function(f, a, b) {
+                const kurallar = {
+                    'x': (b * b - a * a) / 2,
+                    'x^2': (b * b * b - a * a * a) / 3,
+                    'sin': -Math.cos(b * Math.PI / 180) + Math.cos(a * Math.PI / 180),
+                    'cos': Math.sin(b * Math.PI / 180) - Math.sin(a * Math.PI / 180),
+                    'e^x': Math.exp(b) - Math.exp(a),
+                    '1/x': (a <= 0 || b <= 0) ? 'Tanımsız' : Math.log(b) - Math.log(a)
+                };
+                return kurallar[f] || 'Bilinmeyen fonksiyon';
+            },
+
+            // ----- 13. MATRİS -----
+            determinant: function(a, b, c, d) {
+                return a * d - b * c;
+            },
+            ozdeger: function(a, b, c, d) {
+                const trace = a + d;
+                const det = a * d - b * c;
+                const disk = trace * trace - 4 * det;
+                if (disk < 0) {
+                    return `λ₁ = ${trace/2} + ${Math.sqrt(-disk)/2}i, λ₂ = ${trace/2} - ${Math.sqrt(-disk)/2}i`;
+                }
+                const l1 = (trace + Math.sqrt(disk)) / 2;
+                const l2 = (trace - Math.sqrt(disk)) / 2;
+                return `λ₁ = ${l1.toFixed(4)}, λ₂ = ${l2.toFixed(4)}`;
+            },
+
+            // ----- 14. GEOMETRİ -----
+            pisagor: (a, b) => Math.sqrt(a * a + b * b),
+            daireAlan: (r) => Math.PI * r * r,
+            daireCevre: (r) => 2 * Math.PI * r,
+            dikdortgenAlan: (a, b) => a * b,
+            dikdortgenCevre: (a, b) => 2 * (a + b),
+            kareAlan: (a) => a * a,
+            kareCevre: (a) => 4 * a,
+            ucgenAlan: (t, y) => (t * y) / 2,
+
+            // ----- 15. İSTATİSTİK -----
+            ortalama: function(...sayilar) {
+                if (sayilar.length === 0) return 0;
+                return sayilar.reduce((s, x) => s + x, 0) / sayilar.length;
+            },
+            medyan: function(...sayilar) {
+                if (sayilar.length === 0) return 0;
+                const s = [...sayilar].sort((a, b) => a - b);
+                const n = s.length;
+                return n % 2 === 1 ? s[Math.floor(n / 2)] : (s[n / 2 - 1] + s[n / 2]) / 2;
+            },
+            varyans: function(...sayilar) {
+                if (sayilar.length === 0) return 0;
+                const ort = this.ortalama(...sayilar);
+                return sayilar.reduce((s, x) => s + (x - ort) * (x - ort), 0) / sayilar.length;
+            },
+            standartSapma: function(...sayilar) {
+                return Math.sqrt(this.varyans(...sayilar));
+            },
+
+            // ----- 16. OLASILIK -----
+            olasilik: (olumlu, toplam) => toplam === 0 ? 'Tanımsız' : olumlu / toplam,
+
+            // ----- 17. YÜZDE -----
+            yuzde: (sayi, y) => sayi * y / 100,
+            yuzdeArtir: (sayi, y) => sayi * (1 + y / 100),
+            yuzdeAzalt: (sayi, y) => sayi * (1 - y / 100),
+
+            // ----- 18. ORAN-ORANTI -----
+            dogruOranti: (x1, y1, x2) => (y1 * x2) / x1,
+            tersOranti: (x1, y1, x2) => (x1 * y1) / x2,
+
+            // ----- 19. PROBLEM ÇÖZME -----
+            hareket: (hiz, zaman) => hiz * zaman,
+            isci: (i1, i2) => (i1 * i2) / (i1 + i2),
+            havuz: (m1, m2) => (m1 * m2) / (m1 + m2),
+            karisim: (m1, y1, m2, y2) => (m1 * y1 + m2 * y2) / (m1 + m2)
+        };
+
+        // ------------------------------------------------------------
+        // 2. KAVRAM AÇIKLAMA
+        // ------------------------------------------------------------
+
+        const kavramlar = {
+            'pisagor': `📖 **Pisagor Teoremi**
+Dik üçgende hipotenüsün karesi, dik kenarların kareleri toplamına eşittir.
+
+🔢 **Formül:** a² + b² = c² (c = hipotenüs)
+
+🔍 **Çözüm Tekniği:**
+- Hipotenüsü bulmak için: c = √(a² + b²)
+- Dik kenarı bulmak için: a = √(c² - b²)
+
+📍 **Kullanım:** İnşaat, navigasyon, mühendislik.`,
+
+            'türev': `📖 **Türev Nedir?**
+Bir fonksiyonun anlık değişim oranıdır. Fonksiyonun eğimini verir.
+
+🔢 **Temel Kurallar:**
+• f(x) = x^n → f'(x) = n·x^(n-1)
+• f(x) = sin(x) → f'(x) = cos(x)
+• f(x) = cos(x) → f'(x) = -sin(x)
+• f(x) = e^x → f'(x) = e^x
+• f(x) = ln(x) → f'(x) = 1/x
+
+🔍 **Çözüm Tekniği:** Türev alınacak fonksiyonu tanımlayıp kuralı uygula.
+
+📍 **Kullanım:** Fizik (hız, ivme), optimizasyon, ekonomi.`,
+
+            'integral': `📖 **İntegral Nedir?**
+Bir fonksiyonun altında kalan alanı hesaplar. Türevin tersidir.
+
+🔢 **Temel Kurallar:**
+• ∫ x^n dx = x^(n+1)/(n+1) + C
+• ∫ sin(x) dx = -cos(x) + C
+• ∫ cos(x) dx = sin(x) + C
+• ∫ e^x dx = e^x + C
+• ∫ 1/x dx = ln|x| + C
+
+🔍 **Çözüm Tekniği:** Belirli integralde alt ve üst sınırları yerine koy.
+
+📍 **Kullanım:** Alan, hacim, fizik, mühendislik.`,
+
+            'trigonometri': `📖 **Trigonometri Nedir?**
+Üçgenlerin açıları ve kenarları arasındaki ilişkileri inceler.
+
+🔢 **Temel Fonksiyonlar:**
+• sin(θ) = karşı/hipotenüs
+• cos(θ) = komşu/hipotenüs
+• tan(θ) = karşı/komşu = sin/cos
+• cot(θ) = komşu/karşı = cos/sin
+• sec(θ) = 1/cos
+• csc(θ) = 1/sin
+
+🔍 **Çözüm Tekniği:** Verilen açı ve kenar bilgisine göre uygun fonksiyonu seç.
+
+📍 **Kullanım:** Fizik, mühendislik, astronomi, navigasyon.`,
+
+            'matris': `📖 **Matris Nedir?**
+Sayıların dikdörtgen şeklinde düzenlenmiş tablosudur.
+
+🔢 **Temel İşlemler:**
+• Toplama: A+B = [a_ij + b_ij]
+• Çarpma: A×B = Σ a_ik · b_kj
+• Transpoz: A^T = [a_ji]
+• Determinant (2×2): ad - bc
+• Özdeğer: λ = (tr ± √(tr²-4det))/2
+
+🔍 **Çözüm Tekniği:** Matris boyutlarına göre işlem kurallarını uygula.
+
+📍 **Kullanım:** Bilgisayar grafikleri, veri bilimi, yapay zeka.`,
+
+            'logaritma': `📖 **Logaritma Nedir?**
+Üstel fonksiyonun tersidir.
+
+🔢 **Temel Kurallar:**
+• logₐ(b) = c → aᶜ = b
+• log(a·b) = log(a) + log(b)
+• log(a/b) = log(a) - log(b)
+• log(a^b) = b·log(a)
+
+🔍 **Çözüm Tekniği:** Verilen ifadeyi logaritma kurallarına göre dönüştür.
+
+📍 **Kullanım:** Bilim, mühendislik, finans, istatistik.`,
+
+            'asal sayı': `📖 **Asal Sayı Nedir?**
+1'den büyük, yalnızca 1 ve kendisine bölünebilen sayılardır.
+
+🔢 **Özellikler:**
+• 2 en küçük ve tek çift asal sayıdır.
+• Sonsuz tane asal sayı vardır.
+• Her sayı asal çarpanlarına ayrılır.
+
+🔍 **Çözüm Tekniği:** Sayıyı 2'den √n'e kadar bölenleri kontrol et.
+
+📍 **Kullanım:** Kriptografi, bilgisayar bilimleri, sayılar teorisi.`,
+
+            'ebob': `📖 **EBOB (En Büyük Ortak Bölen)**
+İki veya daha fazla sayıyı bölen en büyük sayıdır.
+
+🔢 **Formül:** EBOB(a,b) = a ve b'yi bölen en büyük sayı
+
+🔍 **Çözüm Tekniği:**
+1. Asal çarpanlara ayır ve ortak olanların en küçük üslerini al.
+2. Öklid algoritması: EBOB(a,b) = EBOB(b, a mod b)
+
+📍 **Kullanım:** Kesir sadeleştirme, problem çözme.`,
+
+            'ekok': `📖 **EKOK (En Küçük Ortak Kat)**
+İki veya daha fazla sayının ortak katlarının en küçüğüdür.
+
+🔢 **Formül:** EKOK(a,b) = (a·b) / EBOB(a,b)
+
+🔍 **Çözüm Tekniği:**
+1. Asal çarpanlara ayır ve tüm asal çarpanların en büyük üslerini al.
+2. EBOB ile ilişkisi: EKOK = (a·b) / EBOB
+
+📍 **Kullanım:** Kesir toplama, periyodik olaylar.`
+        };
+
+        // ------------------------------------------------------------
+        // 3. SOHBET MODÜLÜ
+        // ------------------------------------------------------------
+
+        const sohbet = {
+            'merhaba': 'Merhaba! 👋 Hoş geldin! Matematikle ilgili ne öğrenmek istersin?',
+            'nasılsın': 'Ben iyiyim, teşekkür ederim! 😊 Sana nasıl yardımcı olabilirim?',
+            'teşekkür': 'Rica ederim! 🤗 Başka bir sorun varsa buradayım.',
+            'adın': 'Benim adım Matematik Profesörü YZ. 🧠 Sıfırdan yazıldım.',
+            'ne yapıyorsun': 'Matematik öğretiyorum ve sorularına cevap veriyorum. 📚'
+        };
+
+        // ------------------------------------------------------------
+        // 4. SORU ÇÖZÜCÜ (Örnek yok, sadece kurallar)
+        // ------------------------------------------------------------
+
+        function cevapla(soru) {
+            const s = soru.toLowerCase().trim();
+
+            // ----- KAVRAM KONTROLÜ -----
+            for (const [key, value] of Object.entries(kavramlar)) {
+                if (s.includes(key)) return value;
+            }
+
+            // ----- SOHBET KONTROLÜ -----
+            for (const [key, value] of Object.entries(sohbet)) {
+                if (s.includes(key)) return value;
+            }
+
+            // ----- GRAFİK KONTROLÜ -----
+            if (s.includes('grafik') || s.includes('çiz')) {
+                const match = soru.match(/f\(x\)\s*=\s*([^\s]+)/);
+                if (match) {
+                    const f = match[1];
+                    const sayilar = soru.match(/-?\d+/g);
+                    if (sayilar && sayilar.length >= 2) {
+                        const xMin = parseFloat(sayilar[0]);
+                        const xMax = parseFloat(sayilar[1]);
+                        const imgData = grafikCiz(f, xMin, xMax);
+                        if (imgData.startsWith('data:image')) {
+                            return `<img src="${imgData}" alt="Grafik" />`;
+                        }
+                        return imgData;
+                    }
+                    return 'Lütfen x aralığını belirtin: f(x)=x^2 grafik çiz -5 5';
+                }
+                return 'Fonksiyon belirtin: f(x)=x^2 grafik çiz -5 5';
+            }
+
+            // ----- MATEMATİK KURALLARI -----
+
+            // 1. Toplama
+            if (s.includes('+') || s.includes('topla') || s.includes('artı')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar && sayilar.length >= 2) {
+                    const a = parseFloat(sayilar[0]),
+                        b = parseFloat(sayilar[1]);
+                    return `${a} + ${b} = ${kurallar.topla(a, b)}`;
+                }
+            }
+
+            // 2. Çıkarma
+            if (s.includes('-') || s.includes('çıkar') || s.includes('eksi')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar && sayilar.length >= 2) {
+                    const a = parseFloat(sayilar[0]),
+                        b = parseFloat(sayilar[1]);
+                    return `${a} - ${b} = ${kurallar.cikar(a, b)}`;
+                }
+            }
+
+            // 3. Çarpma
+            if (s.includes('*') || s.includes('×') || s.includes('çarp') || s.includes('ile')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar && sayilar.length >= 2) {
+                    const a = parseFloat(sayilar[0]),
+                        b = parseFloat(sayilar[1]);
+                    return `${a} × ${b} = ${kurallar.carp(a, b)}`;
+                }
+            }
+
+            // 4. Bölme
+            if (s.includes('/') || s.includes('÷') || s.includes('böl')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar && sayilar.length >= 2) {
+                    const a = parseFloat(sayilar[0]),
+                        b = parseFloat(sayilar[1]);
+                    return `${a} ÷ ${b} = ${kurallar.bol(a, b)}`;
+                }
+            }
+
+            // 5. Üs
+            if (s.includes('^') || s.includes('üssü')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar && sayilar.length >= 2) {
+                    const a = parseFloat(sayilar[0]),
+                        b = parseFloat(sayilar[1]);
+                    return `${a} ^ ${b} = ${kurallar.us(a, b)}`;
+                }
+            }
+
+            // 6. Karekök
+            if (s.includes('√') || s.includes('karekök') || s.includes('sqrt')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar) {
+                    const x = parseFloat(sayilar[0]);
+                    return `√${x} = ${kurallar.karekok(x)}`;
+                }
+            }
+
+            // 7. Faktöriyel
+            if (s.includes('!') || s.includes('faktöriyel')) {
+                const sayilar = s.match(/\d+/g);
+                if (sayilar) {
+                    const n = parseInt(sayilar[0]);
+                    return `${n}! = ${kurallar.faktoriyel(n)}`;
+                }
+            }
+
+            // 8. Sinüs
+            if (s.includes('sin')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar) {
+                    const x = parseFloat(sayilar[0]);
+                    return `sin(${x}°) = ${kurallar.sin(x)}`;
+                }
+            }
+
+            // 9. Kosinüs
+            if (s.includes('cos')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar) {
+                    const x = parseFloat(sayilar[0]);
+                    return `cos(${x}°) = ${kurallar.cos(x)}`;
+                }
+            }
+
+            // 10. Tanjant
+            if (s.includes('tan')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar) {
+                    const x = parseFloat(sayilar[0]);
+                    return `tan(${x}°) = ${kurallar.tan(x)}`;
+                }
+            }
+
+            // 11. Logaritma
+            if (s.includes('log')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar) {
+                    const x = parseFloat(sayilar[0]);
+                    return `log(${x}) = ${kurallar.log(x)}`;
+                }
+            }
+
+            // 12. EBOB
+            if (s.includes('ebob') || s.includes('gcd')) {
+                const sayilar = s.match(/\d+/g);
+                if (sayilar && sayilar.length >= 2) {
+                    const a = parseInt(sayilar[0]),
+                        b = parseInt(sayilar[1]);
+                    return `EBOB(${a}, ${b}) = ${kurallar.ebob(a, b)}`;
+                }
+            }
+
+            // 13. EKOK
+            if (s.includes('ekok') || s.includes('lcm')) {
+                const sayilar = s.match(/\d+/g);
+                if (sayilar && sayilar.length >= 2) {
+                    const a = parseInt(sayilar[0]),
+                        b = parseInt(sayilar[1]);
+                    return `EKOK(${a}, ${b}) = ${kurallar.ekok(a, b)}`;
+                }
+            }
+
+            // 14. Kombinasyon
+            if (s.includes('kombinasyon') || s.includes('c(')) {
+                const sayilar = s.match(/\d+/g);
+                if (sayilar && sayilar.length >= 2) {
+                    const n = parseInt(sayilar[0]),
+                        r = parseInt(sayilar[1]);
+                    return `C(${n}, ${r}) = ${kurallar.kombinasyon(n, r)}`;
+                }
+            }
+
+            // 15. Permütasyon
+            if (s.includes('permütasyon') || s.includes('p(')) {
+                const sayilar = s.match(/\d+/g);
+                if (sayilar && sayilar.length >= 2) {
+                    const n = parseInt(sayilar[0]),
+                        r = parseInt(sayilar[1]);
+                    return `P(${n}, ${r}) = ${kurallar.permutasyon(n, r)}`;
+                }
+            }
+
+            // 16. Pisagor
+            if (s.includes('pisagor')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar && sayilar.length >= 2) {
+                    const a = parseFloat(sayilar[0]),
+                        b = parseFloat(sayilar[1]);
+                    return `c = √(${a}² + ${b}²) = ${kurallar.pisagor(a, b)}`;
+                }
+            }
+
+            // 17. İkinci Derece Denklem
+            if (s.includes('denklem') || s.includes('çöz')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar && sayilar.length >= 3) {
+                    const a = parseFloat(sayilar[0]),
+                        b = parseFloat(sayilar[1]),
+                        c = parseFloat(sayilar[2]);
+                    return `${a}x² + ${b}x + ${c} = 0\n${kurallar.ikinciDerece(a, b, c)}`;
+                }
+                if (sayilar && sayilar.length >= 2) {
+                    const a = parseFloat(sayilar[0]),
+                        b = parseFloat(sayilar[1]);
+                    return `${a}x + ${b} = 0 → x = ${kurallar.denklemCoz(a, b)}`;
+                }
+            }
+
+            // 18. Türev
+            if (s.includes('türev')) {
+                const match = s.match(/f\(x\)\s*=\s*([^\s]+)/);
+                if (match) {
+                    const f = match[1];
+                    const sayilar = s.match(/-?\d+/g);
+                    if (sayilar) {
+                        const x = parseFloat(sayilar[0]);
+                        return `f'(x) = ${kurallar.turev(f, x)}`;
+                    }
+                    return `f'(x) = ${kurallar.turev(f, 0)} (x=0 için)`;
+                }
+            }
+
+            // 19. İntegral
+            if (s.includes('integral')) {
+                const match = s.match(/f\(x\)\s*=\s*([^\s]+)/);
+                if (match) {
+                    const f = match[1];
+                    const sayilar = s.match(/-?\d+/g);
+                    if (sayilar && sayilar.length >= 2) {
+                        const a = parseFloat(sayilar[0]),
+                            b = parseFloat(sayilar[1]);
+                        return `∫ ${f} dx = ${kurallar.integral(f, a, b)} (${a} → ${b})`;
+                    }
+                }
+            }
+
+            // 20. Determinant
+            if (s.includes('determinant') || s.includes('det')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar && sayilar.length >= 4) {
+                    const a = parseFloat(sayilar[0]),
+                        b = parseFloat(sayilar[1]),
+                        c = parseFloat(sayilar[2]),
+                        d = parseFloat(sayilar[3]);
+                    return `det([[${a}, ${b}], [${c}, ${d}]]) = ${kurallar.determinant(a, b, c, d)}`;
+                }
+            }
+
+            // 21. Özdeğer
+            if (s.includes('özdeğer') || s.includes('eigen')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar && sayilar.length >= 4) {
+                    const a = parseFloat(sayilar[0]),
+                        b = parseFloat(sayilar[1]),
+                        c = parseFloat(sayilar[2]),
+                        d = parseFloat(sayilar[3]);
+                    return `[[${a}, ${b}], [${c}, ${d}]]\n${kurallar.ozdeger(a, b, c, d)}`;
+                }
+            }
+
+            // 22. Asal sayı
+            if (s.includes('asal')) {
+                const sayilar = s.match(/\d+/g);
+                if (sayilar) {
+                    const n = parseInt(sayilar[0]);
+                    return `${n} ${kurallar.asalMi(n) ? 'ASAL' : 'asal değil'}`;
+                }
+            }
+
+            // 23. Olasılık
+            if (s.includes('olasılık')) {
+                const sayilar = s.match(/\d+/g);
+                if (sayilar && sayilar.length >= 2) {
+                    const olumlu = parseInt(sayilar[0]),
+                        toplam = parseInt(sayilar[1]);
+                    return `P = ${olumlu}/${toplam} = ${kurallar.olasilik(olumlu, toplam)}`;
+                }
+            }
+
+            // 24. Ortalama
+            if (s.includes('ortalama')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar) {
+                    const sayiList = sayilar.map(Number);
+                    return `Ortalama = ${kurallar.ortalama(...sayiList)}`;
+                }
+            }
+
+            // 25. Medyan
+            if (s.includes('medyan')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar) {
+                    const sayiList = sayilar.map(Number);
+                    return `Medyan = ${kurallar.medyan(...sayiList)}`;
+                }
+            }
+
+            // 26. Dizi
+            if (s.includes('aritmetik dizi')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar && sayilar.length >= 3) {
+                    const a1 = parseFloat(sayilar[0]),
+                        d = parseFloat(sayilar[1]),
+                        n = parseInt(sayilar[2]);
+                    return `aₙ = ${a1} + (${n}-1)×${d} = ${kurallar.aritmetikDizi(a1, d, n)}`;
+                }
+            }
+            if (s.includes('geometrik dizi')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar && sayilar.length >= 3) {
+                    const a1 = parseFloat(sayilar[0]),
+                        r = parseFloat(sayilar[1]),
+                        n = parseInt(sayilar[2]);
+                    return `aₙ = ${a1} × ${r}^(${n}-1) = ${kurallar.geometrikDizi(a1, r, n)}`;
+                }
+            }
+
+            // 27. Yüzde
+            if (s.includes('yüzde')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar && sayilar.length >= 2) {
+                    const sayi = parseFloat(sayilar[0]),
+                        y = parseFloat(sayilar[1]);
+                    return `${sayi} sayısının %${y} = ${kurallar.yuzde(sayi, y)}`;
+                }
+            }
+
+            // 28. Geometri (Alan/Çevre)
+            if (s.includes('daire alan')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar) {
+                    const r = parseFloat(sayilar[0]);
+                    return `Daire Alanı = π·${r}² = ${kurallar.daireAlan(r)}`;
+                }
+            }
+            if (s.includes('daire çevre')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar) {
+                    const r = parseFloat(sayilar[0]);
+                    return `Daire Çevresi = 2π·${r} = ${kurallar.daireCevre(r)}`;
+                }
+            }
+            if (s.includes('dikdörtgen alan')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar && sayilar.length >= 2) {
+                    const a = parseFloat(sayilar[0]),
+                        b = parseFloat(sayilar[1]);
+                    return `Dikdörtgen Alanı = ${a}×${b} = ${kurallar.dikdortgenAlan(a, b)}`;
+                }
+            }
+            if (s.includes('kare alan')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar) {
+                    const a = parseFloat(sayilar[0]);
+                    return `Kare Alanı = ${a}² = ${kurallar.kareAlan(a)}`;
+                }
+            }
+
+            // 29. Varyans ve Standart Sapma
+            if (s.includes('varyans')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar) {
+                    const sayiList = sayilar.map(Number);
+                    return `Varyans = ${kurallar.varyans(...sayiList)}`;
+                }
+            }
+            if (s.includes('standart sapma')) {
+                const sayilar = s.match(/-?\d+/g);
+                if (sayilar) {
+                    const sayiList = sayilar.map(Number);
+                    return `Standart Sapma = ${kurallar.standartSapma(...sayiList)}`;
+                }
+            }
+
+            // ----- BİLİNMEYEN -----
+            return `🤔 Bu soruyu çözmek için yeterli bilgi yok.\n\n📌 Lütfen daha açık yazın veya farklı bir konu sorun.`;
+        }
+
+        // ------------------------------------------------------------
+        // 5. GRAFİK ÇİZİM MOTORU (JavaScript ile)
+        // ------------------------------------------------------------
+
+        function grafikCiz(fonksiyon, xMin, xMax) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 600;
+            canvas.height = 400;
+            const ctx = canvas.getContext('2d');
+
+            const w = canvas.width,
+                h = canvas.height,
+                pad = 40;
+            const noktaSayisi = 300;
+            const xDizi = [],
+                yDizi = [];
+            let yMin = Infinity,
+                yMax = -Infinity;
+
+            for (let i = 0; i <= noktaSayisi; i++) {
+                const x = xMin + (xMax - xMin) * (i / noktaSayisi);
+                try {
+                    const y = eval(fonksiyon.replace(/x/g, `(${x})`).replace(/\^/g, '**'));
+                    if (isFinite(y)) {
+                        xDizi.push(x);
+                        yDizi.push(y);
+                        if (y < yMin) yMin = y;
+                        if (y > yMax) yMax = y;
+                    }
+                } catch (e) {}
+            }
+
+            if (yDizi.length === 0) return '⚠️ Fonksiyon çizilemedi.';
+            if (yMin === yMax) { yMin -= 1;
+                yMax += 1; }
+            const yRange = yMax - yMin || 1;
+
+            ctx.fillStyle = '#0a0a15';
+            ctx.fillRect(0, 0, w, h);
+
+            // Izgara
+            ctx.strokeStyle = '#1a1a30';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 10; i++) {
+                const x = pad + (i / 10) * (w - 2 * pad);
+                ctx.beginPath();
+                ctx.moveTo(x, pad);
+                ctx.lineTo(x, h - pad);
+                ctx.stroke();
+                const y = pad + (i / 10) * (h - 2 * pad);
+                ctx.beginPath();
+                ctx.moveTo(pad, y);
+                ctx.lineTo(w - pad, y);
+                ctx.stroke();
+            }
+
+            // Eksenler
+            ctx.strokeStyle = '#444';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(pad, pad);
+            ctx.lineTo(pad, h - pad);
+            ctx.lineTo(w - pad, h - pad);
+            ctx.stroke();
+
+            // Etiketler
+            ctx.fillStyle = '#888';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(xMin.toFixed(1), pad, h - pad + 20);
+            ctx.fillText(xMax.toFixed(1), w - pad, h - pad + 20);
+            ctx.textAlign = 'right';
+            ctx.fillText(yMax.toFixed(1), pad - 10, pad + 5);
+            ctx.fillText(yMin.toFixed(1), pad - 10, h - pad + 5);
+
+            // Fonksiyon çiz
+            ctx.strokeStyle = '#00d2ff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            let ilk = true;
+            for (let i = 0; i < xDizi.length; i++) {
+                const x = pad + ((xDizi[i] - xMin) / (xMax - xMin)) * (w - 2 * pad);
+                const y = pad + (h - 2 * pad) - ((yDizi[i] - yMin) / yRange) * (h - 2 * pad);
+                if (ilk) { ctx.moveTo(x, y);
+                    ilk = false; } else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            return canvas.toDataURL();
+        }
+
+        // ------------------------------------------------------------
+        // 6. ARAYÜZ KONTROLLERİ
+        // ------------------------------------------------------------
+
+        function mesajEkle(metin, tur) {
+            const div = document.createElement('div');
+            div.className = `message ${tur}`;
+            const label = document.createElement('div');
+            label.className = 'label';
+            label.textContent = tur === 'user-msg' ? '👤 Sen' : '🧠 YZ';
+            div.appendChild(label);
+
+            if (metin.includes('<img')) {
+                div.innerHTML += metin;
+            } else {
+                const p = document.createElement('div');
+                p.innerHTML = metin.replace(/\n/g, '<br>');
+                div.appendChild(p);
+            }
+
+            chatArea.appendChild(div);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function soruGir(text) {
+            soruInput.value = text;
+            sor();
+        }
+
+        function sor() {
+            const soru = soruInput.value.trim();
+            if (!soru) {
+                mesajEkle('⚠️ Lütfen bir şey yaz.', 'ai-msg');
+                return;
+            }
+
+            mesajEkle(soru, 'user-msg');
+            soruInput.value = '';
+            gonderBtn.disabled = true;
+
+            const cevap = cevapla(soru);
+            mesajEkle(cevap, 'ai-msg');
+
+            gonderBtn.disabled = false;
+            soruInput.focus();
+        }
+
+        soruInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sor();
+        });
+
+        soruInput.focus();
+        console.log('🧠 Matematik Profesörü YZ Başlatıldı!');
+        console.log('📚 Tüm konular, örnek yok, sadece kurallar.');
+    </script>
+</body>
+</html>
